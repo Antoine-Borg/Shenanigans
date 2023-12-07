@@ -1,0 +1,56 @@
+import matplotlib.pyplot as plt
+import requests
+
+from bs4 import BeautifulSoup
+
+
+def get_first_link(url):
+    response = requests.get(url, verify=False)
+    soup = BeautifulSoup(response.content, "html.parser")
+    content = soup.find(id="mw-content-text").find(class_="mw-parser-output")
+    for element in content.find_all("p", recursive=False):
+        if element.a and element.a.get("href") and not element.a["href"].startswith("#"):
+
+            title=element.a['href']
+            first_title=title.split('/')[-1]
+            second_title=title.split('/')[-2]
+            if not 'Wikipedia' in first_title and not 'Help' in second_title and not 'geohack' in second_title and not 'Ancient Greek Language' in first_title:
+                return "https://en.wikipedia.org" + element.a["href"]
+    return None
+
+def visit_page(url, titles):
+    global c
+    if url in visited:
+        return
+    visited.add(url)
+    title=url.split('/')[-1]
+    titles.append(title)
+
+    if title=='Philosophy':
+        return titles
+
+    print("Visiting:", url)
+    first_link = get_first_link(url)
+    if first_link is None:
+        c+=-1
+    else:
+        visit_page(first_link, titles)
+
+
+
+start_url = "https://en.wikipedia.org/wiki/Special:Random"
+
+
+score=[]
+c=0
+while c<5:
+    titles = []
+    visited = set()
+    visit_page(start_url,titles)
+    count=len(titles)
+    score.append(count)
+    c+=1
+
+plt.boxplot(score, showmeans=True)
+plt.title('Number of first links to visit in  wikipedia to reach "Philosophy"')
+plt.show()
