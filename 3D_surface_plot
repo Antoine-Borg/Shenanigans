@@ -12,10 +12,6 @@ import pandas as pd
 import plotly
 import plotly.graph_objs as go
 
-directory_name = 'transferts ED6.xlsx'
-dir_input = r'C:\Users\I0497227\OneDrive - Centreapi\Bureau\Boulot (temporaire)\Graphs Joris'
-
-file_name_input = os.path.join(dir_input, directory_name)
 df = pd.read_excel(file_name_input)
 
 df.index=df[df.columns[0]]
@@ -40,32 +36,6 @@ trace1 = go.Surface(
     opacity=0.5,
     colorscale='Viridis',
 )
-
-# trace2 = go.Scatter3d(
-#     x=x2,
-#     y=y2,
-#     z=z2,
-#     mode='markers',
-#     marker=dict(
-#         size=3,
-#         color='red',
-#         symbol='circle'
-#     ),
-#     name='Best settings',
-# )
-#
-# trace3 = go.Scatter3d(
-#     x=t3,
-#     y=n3,
-#     z=z3,
-#     mode='markers',
-#     marker=dict(
-#         size=5,
-#         color='black',
-#         symbol='circle'
-#     ),
-#     name='S/N',
-# )
 
 # Define the layout for the graph
 
