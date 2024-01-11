@@ -1,0 +1,89 @@
+import math
+import os
+import matplotlib
+matplotlib.use("QtAgg")
+from matplotlib import pyplot as plt
+
+
+import numpy as np
+import pandas as pd
+
+
+import plotly
+import plotly.graph_objs as go
+
+directory_name = 'transferts ED6.xlsx'
+dir_input = r'C:\Users\I0497227\OneDrive - Centreapi\Bureau\Boulot (temporaire)\Graphs Joris'
+
+file_name_input = os.path.join(dir_input, directory_name)
+df = pd.read_excel(file_name_input)
+
+df.index=df[df.columns[0]]
+df.drop(df.columns[0], axis=1, inplace=True)
+
+
+
+X=[]
+Y=[]
+Z=[]
+for index, row in df.iterrows():
+    for column_name, value in row.iteritems():
+        X.append(index)
+        Y.append(column_name)
+        Z.append(value)
+
+# Create a new surface trace with two surfacecolor arrays
+trace1 = go.Surface(
+    x=df.columns,
+    y=df.index,
+    z=df.values,
+    opacity=0.5,
+    colorscale='Viridis',
+)
+
+# trace2 = go.Scatter3d(
+#     x=x2,
+#     y=y2,
+#     z=z2,
+#     mode='markers',
+#     marker=dict(
+#         size=3,
+#         color='red',
+#         symbol='circle'
+#     ),
+#     name='Best settings',
+# )
+#
+# trace3 = go.Scatter3d(
+#     x=t3,
+#     y=n3,
+#     z=z3,
+#     mode='markers',
+#     marker=dict(
+#         size=5,
+#         color='black',
+#         symbol='circle'
+#     ),
+#     name='S/N',
+# )
+
+# Define the layout for the graph
+
+layout = go.Layout(
+    title='Transferts ED6'
+    ,
+    scene=dict(
+        xaxis_title='VVM Agitation',
+    ),
+    showlegend=True
+)
+
+
+fig = go.Figure(data=[trace1], layout=layout)
+
+fig.show()
+
+with open("3D_graph.html", "w") as f:
+    f.write(fig.to_html(include_plotlyjs='cdn'))
+
+
